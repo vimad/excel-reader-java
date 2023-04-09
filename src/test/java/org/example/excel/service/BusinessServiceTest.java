@@ -1,17 +1,20 @@
-package org.example.excel;
+package org.example.excel.service;
 
+import org.example.excel.model.Person;
+import org.example.excel.service.BusinessService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ExcelToObjectMappingServiceTest {
+public class BusinessServiceTest {
 
     @Test
     public void readFileTest() throws Exception {
-        ExcelToObjectMappingService excelToObjectMappingService = new ExcelToObjectMappingService();
-        List<Person> people = excelToObjectMappingService.readAndMap("src/test/resources/sample-file.xlsx");
+        BusinessService businessService = new BusinessService();
+        businessService.process("src/test/resources/sample-file.xlsx");
+        List<Person> people = businessService.getPeople();
         assertEquals(3, people.size());
         Person person = people.get(0);
         assertEquals("John", person.getName());

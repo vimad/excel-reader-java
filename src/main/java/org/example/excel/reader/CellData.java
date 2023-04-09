@@ -1,4 +1,4 @@
-package org.example.excel;
+package org.example.excel.reader;
 
 public class CellData {
 

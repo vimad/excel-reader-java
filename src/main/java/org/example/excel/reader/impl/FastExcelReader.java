@@ -1,10 +1,13 @@
-package org.example.excel;
+package org.example.excel.reader.impl;
 
 import lombok.SneakyThrows;
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
+import org.example.excel.reader.CellData;
+import org.example.excel.reader.ExcelProcessorContext;
+import org.example.excel.reader.ExcelReader;
 
 import java.io.File;
 import java.util.Iterator;
@@ -12,7 +15,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class FastExcelReaderImpl implements ExcelReader {
+public class FastExcelReader implements ExcelReader {
 
     @Override
     @SneakyThrows
@@ -29,9 +32,9 @@ public class FastExcelReaderImpl implements ExcelReader {
                 while (it.hasNext()) {
                     Row row = it.next();
                     if (context.isSkipHeader() && row.getRowNum() == 1) continue;
-                    context.getRowStart().run();
-                    row.stream().forEach(cell -> handleCell(cell, context.getCellConsumer()));
-                    context.getRowEnd().run();
+                    context.getStartRowTrigger().run();
+                    row.stream().forEach(cell -> handleCell(cell, context.getCellConsumers()));
+                    context.getEndRowTrigger().run();
                 }
 
             }

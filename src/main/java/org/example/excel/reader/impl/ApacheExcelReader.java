@@ -1,12 +1,15 @@
-package org.example.excel;
+package org.example.excel.reader.impl;
 
 import lombok.SneakyThrows;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.example.excel.reader.CellData;
+import org.example.excel.reader.ExcelProcessorContext;
+import org.example.excel.reader.ExcelReader;
 
 import java.io.FileInputStream;
 
-public class ApacheExcelReaderImpl implements ExcelReader {
+public class ApacheExcelReader implements ExcelReader {
 
     @Override
     @SneakyThrows
@@ -15,13 +18,13 @@ public class ApacheExcelReaderImpl implements ExcelReader {
         Workbook workbook = new XSSFWorkbook(file);
         Sheet sheet = workbook.getSheetAt(0);
 
-        Runnable rowStart = context.getRowStart();
-        Runnable rowEnd = context.getRowEnd();
+        Runnable rowStart = context.getStartRowTrigger();
+        Runnable rowEnd = context.getEndRowTrigger();
         for (Row row : sheet) {
             if (context.isSkipHeader() && row.getRowNum() == 0) continue;
             rowStart.run();
             for (Cell cell : row) {
-                context.getCellConsumer().get(cell.getColumnIndex()).accept(convertToCellData(cell));
+                context.getCellConsumers().get(cell.getColumnIndex()).accept(convertToCellData(cell));
             }
             rowEnd.run();
         }

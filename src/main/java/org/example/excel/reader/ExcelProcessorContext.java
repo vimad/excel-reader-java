@@ -1,7 +1,8 @@
-package org.example.excel;
+package org.example.excel.reader;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.example.excel.reader.CellData;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -10,8 +11,8 @@ import java.util.function.Consumer;
 @Builder
 public class ExcelProcessorContext {
     private String filePath;
-    private Map<Integer, Consumer<CellData>> cellConsumer;
-    private Runnable rowStart;
-    private Runnable rowEnd;
+    private Map<Integer, Consumer<CellData>> cellConsumers;
+    private Runnable startRowTrigger;
+    private Runnable endRowTrigger;
     private boolean skipHeader;
 }
