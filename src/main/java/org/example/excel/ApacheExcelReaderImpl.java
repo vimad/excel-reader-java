@@ -1,10 +1,7 @@
 package org.example.excel;
 
 import lombok.SneakyThrows;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
@@ -24,10 +21,20 @@ public class ApacheExcelReaderImpl implements ExcelReader {
             if (context.isSkipHeader() && row.getRowNum() == 0) continue;
             rowStart.run();
             for (Cell cell : row) {
-                context.getCellConsumer().get(cell.getColumnIndex()).accept(cell);
+                context.getCellConsumer().get(cell.getColumnIndex()).accept(convertToCellData(cell));
             }
             rowEnd.run();
         }
+    }
+
+    private CellData convertToCellData(Cell cell) {
+        CellType cellType = cell.getCellType();
+        if (cellType == CellType.NUMERIC) {
+            return new CellData(cell.getNumericCellValue());
+        } else if (cellType == CellType.STRING) {
+            return new CellData(cell.getStringCellValue());
+        }
+        return null;
     }
 
 

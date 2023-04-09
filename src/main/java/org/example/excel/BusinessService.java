@@ -1,7 +1,6 @@
 package org.example.excel;
 
 import lombok.SneakyThrows;
-import org.apache.poi.ss.usermodel.Cell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class BusinessService {
 
     @SneakyThrows
     public void process(String filePath) {
-        Map<Integer, Consumer<Cell>> cellConsumers = new HashMap<>();
+        Map<Integer, Consumer<CellData>> cellConsumers = new HashMap<>();
         cellConsumers.put(0, this::setName);
         cellConsumers.put(1, this::setAge);
         ExcelProcessorContext context = ExcelProcessorContext.builder()
@@ -30,17 +29,18 @@ public class BusinessService {
                 .cellConsumer(cellConsumers)
                 .skipHeader(true)
                 .build();
-        ExcelReader excelReader = new ApacheExcelReaderImpl();
+//        ExcelReader excelReader = new ApacheExcelReaderImpl();
+        ExcelReader excelReader = new FastExcelReaderImpl();
         excelReader.readFile(context);
 
     }
 
-    private void setName(Cell cell) {
-        personBuilder.name(cell.getStringCellValue());
+    private void setName(CellData cell) {
+        personBuilder.name(cell.getValueAsString());
     }
 
-    private void setAge(Cell cell) {
-        personBuilder.age((int) cell.getNumericCellValue());
+    private void setAge(CellData cell) {
+        personBuilder.age(cell.getValueAsInt());
     }
 
     private void startRow() {
