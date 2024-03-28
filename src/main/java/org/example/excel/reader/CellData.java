@@ -2,7 +2,7 @@ package org.example.excel.reader;
 
 public class CellData {
 
-    private Object value;
+    private final Object value;
 
     public CellData(Object value) {
         this.value = value;
